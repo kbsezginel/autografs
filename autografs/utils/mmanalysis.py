@@ -236,9 +236,9 @@ def best_type(dx     ,
             mincost= cost
     return mintyp
 
-def analyze_mm(sbu):
+def analyze_mm(sbu, library="uff4mof"):
     """Returns the UFF types and bond matrix for an ASE Atoms."""
-    ufflib  = read_uff_library(library="uff4mof")
+    ufflib  = read_uff_library(library=library)
     bonds   = get_bond_matrix(sbu)
     mmtypes = [None,]*len(sbu)
     for atom in sbu:
