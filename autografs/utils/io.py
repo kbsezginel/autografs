@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 def read_cgd(path=None):
     """Return a dictionary of topologies as ASE Atoms objects
-    
+
     The format CGD is used mainly by the Systre software
     and by Autografs. All details can be read on the website
     http://rcsr.anu.edu.au/systre
@@ -110,7 +110,7 @@ def read_cgd(path=None):
                 if len(cell)==3:
                     # 2D net, only one angle and two vectors.
                     # need to be completed up to 6 parameters
-                    pbc  = [True,True,False] 
+                    pbc  = [True,True,False]
                     cell = numpy.array(list(cell[0:2])+[10.0,90.0,90.0]+list(cell[2:]), dtype=numpy.float32)
                     # node coordinates also need to be padded
                     nodes = numpy.pad(nodes, ((0,0),(0,1)), 'constant', constant_values=0.0)
@@ -124,7 +124,7 @@ def read_cgd(path=None):
                 if ":" in group:
                     # setting might be 2
                     group, setting = group.split(":")
-                    try: 
+                    try:
                         setting = int(setting.strip())
                     except ValueError:
                         setting = 1
@@ -143,7 +143,7 @@ def read_cgd(path=None):
                                         pbc=pbc,
                                         primitive_cell=False,
                                         onduplicates="keep")
-                    # TODO !!! find a way to use equivalent positions for 
+                    # TODO !!! find a way to use equivalent positions for
                     # the multiple components frameworks !!!
                     # use the info keyword to store it
                     topologies[name] = topology

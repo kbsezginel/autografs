@@ -38,8 +38,8 @@ class PointGroup(object):
            have the rare T, O or I point groups.
     """
 
-    def __init__(self, 
-                 mol, 
+    def __init__(self,
+                 mol,
                  tol=0.1):
         """The default settings are usually sufficient.
             -- mol : Molecule to determine point group for.
@@ -247,8 +247,8 @@ class PointGroup(object):
         valid_sets = []
         numbers  = self.mol.get_atomic_numbers()
         dists    = numpy.linalg.norm(self.mol.get_positions(),axis=1,keepdims=True)
-        clusters = scipy.cluster.hierarchy.fclusterdata(dists, 
-                                                        self.tol, 
+        clusters = scipy.cluster.hierarchy.fclusterdata(dists,
+                                                        self.tol,
                                                         criterion='distance')
         for cval in set(clusters):
             indices = numpy.where(clusters==cval)[0]
@@ -295,7 +295,7 @@ class PointGroup(object):
                     self.nrot += 1
                     found= True
         return found
-        
+
     def analyze_spherical_top(self):
         """Handles Sperhical Top Molecules, which belongs to the T, O or I point
         groups.
@@ -391,7 +391,7 @@ def get_potential_axes(mol):
                 axis = qhull.points[side].mean(axis=0)
                 potential_axes.append(axis)
                 # perpendicular to side
-                a0,a1 = qhull.points[side]  
+                a0,a1 = qhull.points[side]
                 axis = numpy.cross(a0,a1)
                 potential_axes.append(axis)
     except scipy.spatial.qhull.QhullError:
@@ -403,12 +403,12 @@ def get_potential_axes(mol):
         for side in itertools.combinations(list(positions), 2):
             # middle of side
             axis = numpy.array(side).mean(axis=0)
-            potential_axes.append(axis)             
+            potential_axes.append(axis)
             axis = numpy.cross(side[0],side[1])
-            potential_axes.append(axis)     
+            potential_axes.append(axis)
         for a0,a1 in itertools.combinations(list(potential_axes),2):
             axis = numpy.cross(a0,a1)
-            potential_axes.append(axis)     
+            potential_axes.append(axis)
     potential_axes = numpy.array(potential_axes)
     norm = numpy.linalg.norm(potential_axes,axis=1)
     norm[norm<1e-3] = 1.0
@@ -434,13 +434,13 @@ def unique_axes(potential_axes,epsilon=0.1):
             axes.append(axis)
     return numpy.asarray(axes)
 
-def get_symmetry_elements(mol, 
+def get_symmetry_elements(mol,
                           max_order=8,
                           epsilon=0.1):
     """Return an array counting the found symmetries
     of the object, up to axes of order max_order.
     Enables fast comparison of compatibility between objects:
-    if array1 - array2 > 0, that means object1 fits the slot2 
+    if array1 - array2 > 0, that means object1 fits the slot2
     """
     if len(mol)==1:
         logger.debug("Point-symmetry detected.")
@@ -487,7 +487,7 @@ def get_symmetry_elements(mol,
         ref = reflection(axis)
         has_ref = is_valid_op(mol,ref)
         if has_ref:
-            dots = [abs(axis.dot(max_axis)) 
+            dots = [abs(axis.dot(max_axis))
                     for max_axis in principal_axes]
             if not dots:
                 continue

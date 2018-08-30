@@ -29,11 +29,11 @@ import warnings
 
 
 from autografs.utils            import symmetry
-from autografs.utils.mmanalysis import analyze_mm 
+from autografs.utils.mmanalysis import analyze_mm
 
 from autografs.utils            import __data__
 
-logger = logging.getLogger(__name__) 
+logger = logging.getLogger(__name__)
 
 
 class SBU(object):
@@ -45,7 +45,7 @@ class SBU(object):
         """Constructor for a building unit, from an ASE Atoms."""
         logger.debug("New instance of SBU {0}".format(name))
         self.name = name
-        self.atoms = atoms 
+        self.atoms = atoms
         self.mmtypes = []
         self.bonds = []
         self.shape = []
@@ -115,16 +115,16 @@ class SBU(object):
                       point_group = None,
                       coercion = False):
         """Return True if symmetry compatible with symmops.
-        
+
         For an SBU to be compatible for alignment with a topology slot
         it has to have at least as many symmetry operators as the slot for
         each type of symmetry. We assume the coordination is checked elsewhere.
-        shape -- array of counts for symmetry axes. 
+        shape -- array of counts for symmetry axes.
                  last element is the multiplicity
         """
         logger.debug("SBU {0}: checking compatibility with slot.".format(self.name))
         compatible = False
-        # test for compatible multiplicity  
+        # test for compatible multiplicity
         mult = (self.shape[-1] ==  shape[-1])
         if mult:
             # use point group as first test
@@ -211,4 +211,3 @@ def read_sbu_database(update = False,
 if __name__ == "__main__":
 
     sbus = read_sbu_database(update=True)
-

@@ -26,14 +26,14 @@ from autografs.utils.topology   import read_topologies_database
 from autografs.utils.topology   import Topology
 from autografs.framework        import Framework
 
-logger = logging.getLogger(__name__) 
+logger = logging.getLogger(__name__)
 
 class Autografs(object):
     """Framework maker class to generate ASE Atoms objects from topologies.
 
     AuToGraFS: Automatic Topological Generator for Framework Structures.
     Addicoat, M., Coupry, D. E., & Heine, T. (2014).
-    The Journal of Physical Chemistry. A, 118(40), 9607–14. 
+    The Journal of Physical Chemistry. A, 118(40), 9607–14.
     """
 
     def  __init__(self,
@@ -94,7 +94,7 @@ class Autografs(object):
         Main funtion of Autografs. The sbu names and topology's
         are to be taken from the compiled databases. The sbu_dict
         can also be passed for multiple components frameworks.
-        If the sbu_names is a list of tuples in the shape 
+        If the sbu_names is a list of tuples in the shape
         (name,n), the number n will be used as a drawing probability
         when multiple options are available for the same shape.
         topology_name -- name of the topology to use
@@ -169,7 +169,7 @@ class Autografs(object):
             logging.info("\t|--> SBU {sbn}".format(sbn=sbu.name))
         return None
 
-    def get_topology(self, 
+    def get_topology(self,
                      topology_name = None):
         """Generates and return a Topology object"""
         topology_atoms = self.topologies[topology_name]
@@ -209,7 +209,7 @@ class Autografs(object):
                 by_shape[slot].append(sbu)
         # now fill the choices
         sbu_dict = {}
-        for index,shape in self.topology.shapes.items():       
+        for index,shape in self.topology.shapes.items():
             # here, should accept weights also
             shape = tuple(shape)
             if shape not in by_shape.keys():
@@ -328,7 +328,7 @@ class Autografs(object):
         """
         these_topologies_names = self.topologies.keys()
         if max_size is None:
-            max_size = 999999   
+            max_size = 999999
         if from_list:
             these_topologies_names = from_list
         if pbc == "2D":
@@ -376,7 +376,7 @@ class Autografs(object):
                            from_list = [],
                            coercion = False):
         """Return the dictionary of compatible SBU.
-        
+
         Filters the existing SBU by shape until only
         those compatible with a slot within the topology are left.
         topology -- name of the topology in the database
@@ -415,7 +415,7 @@ class Autografs(object):
                         av_sbu[tuple(sites)].append(sbu.name)
         else:
             logger.info("Listing full database of SBU.")
-            av_sbu = list(self.sbu.keys())    
+            av_sbu = list(self.sbu.keys())
         return dict(av_sbu)
 
 
@@ -427,4 +427,3 @@ if __name__ == "__main__":
     topology_name  = "pcu"
     mof = molgen.make(topology_name=topology_name,sbu_names=sbu_names)
     mof.view()
-

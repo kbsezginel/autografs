@@ -31,7 +31,7 @@ def inertia(xyz,
                      [Ixy,Iyy,Iyz],
                      [Ixz,Iyz,Izz]],dtype=numpy.float32)
     return I
-    
+
 def rotation(axis ,
              order):
     """Return a rotation matrix around the axis"""
@@ -54,13 +54,13 @@ def rotation(axis ,
     M[2,0] = (1.0-costh)*v0*v2 - v1*sinth
     M[0,2] = (1.0-costh)*v0*v2 + v1*sinth
     M[2,1] = (1.0-costh)*v1*v2 + v0*sinth
-    M[1,2] = (1.0-costh)*v1*v2 - v0*sinth   
+    M[1,2] = (1.0-costh)*v1*v2 - v0*sinth
     return M
-    
-    
+
+
 def reflection(axis):
     """Return a reflection matrix around the axis"""
-    M = numpy.eye(3)    
+    M = numpy.eye(3)
     norm = numpy.linalg.norm(axis)
     if norm<1e-3:
         norm = 1.0
@@ -71,11 +71,11 @@ def reflection(axis):
     M[0,0] = 1.0-2.0*v0*v0
     M[1,1] = 1.0-2.0*v1*v1
     M[2,2] = 1.0-2.0*v2*v2
-    M[1,0] =    -2.0*v0*v1 
-    M[0,1] =    -2.0*v0*v1 
-    M[2,0] =    -2.0*v0*v2 
-    M[0,2] =    -2.0*v0*v2 
-    M[2,1] =    -2.0*v1*v2 
+    M[1,0] =    -2.0*v0*v1
+    M[0,1] =    -2.0*v0*v1
+    M[2,0] =    -2.0*v0*v2
+    M[0,2] =    -2.0*v0*v2
+    M[2,1] =    -2.0*v1*v2
     M[1,2] =    -2.0*v1*v2
     return M
 
@@ -112,7 +112,7 @@ def procrustes(X,
         raise NotImplementedError("Unknown method. Implemented are SVD or Q")
     return R, scale
 
-def is_valid_op(mol,  
+def is_valid_op(mol,
                 symmop,
                 epsilon = 0.1):
     """Check if a particular symmetry operation is a valid symmetry operation

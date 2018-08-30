@@ -46,7 +46,7 @@ class Topology(object):
         """Constructor for a topology, from an ASE Atoms."""
         logger.debug("Creating Topology {0}".format(name))
         self.name  = name
-        self.atoms = atoms 
+        self.atoms = atoms
         # initialize empty fragments
         # shapes and symmops will be used to find
         # corresponding SBUs.
@@ -86,12 +86,12 @@ class Topology(object):
 
     def get_unique_shapes(self):
         """Return all unique shapes in the topology."""
-        logger.debug("Topology {0}: listing unique fragment shapes.".format(self.name)) 
+        logger.debug("Topology {0}: listing unique fragment shapes.".format(self.name))
         return set([tuple(shape) for shape in self.shapes.values()])
 
     def get_unique_pointgroups(self):
         """Return all unique shapes in the topology."""
-        logger.debug("Topology {0}: listing unique fragment point groups.".format(self.name)) 
+        logger.debug("Topology {0}: listing unique fragment point groups.".format(self.name))
         return set(self.pointgroups.values())
 
     def has_compatible_slots(self,
@@ -99,7 +99,7 @@ class Topology(object):
                              coercion=False):
         """Return [shapes...] for the slots compatible with the SBU"""
         slots = []
-        complist = [(ai, self.shapes[ai],self.pointgroups[ai]) 
+        complist = [(ai, self.shapes[ai],self.pointgroups[ai])
                     for ai in self.fragments.keys()]
         seen_idx = []
         for idx, shape, pg in complist:
@@ -107,7 +107,7 @@ class Topology(object):
                 continue
             eq_sites = [s for s in self.equivalent_sites if idx in s][0]
             seen_idx += eq_sites
-            # test for compatible multiplicity  
+            # test for compatible multiplicity
             mult = (sbu.shape[-1] ==  shape[-1])
             if not mult:
                 continue
@@ -148,8 +148,8 @@ class Topology(object):
             L   = 0
             eps = mindist*0.5
             coord = self.atoms[other_index].number
-            # we nee to coerce the cutoffs to have 
-            # the good amount of dummies. 
+            # we nee to coerce the cutoffs to have
+            # the good amount of dummies.
             # in theory, should loop only once
             breaker = 0
             while L!=coord:
@@ -161,7 +161,7 @@ class Topology(object):
                 for cluster_index in set(clusters):
                     # check this cluster distances
                     indices   = numpy.where(clusters==cluster_index)[0]
-                    cutoff_tmp = dists[indices].mean() 
+                    cutoff_tmp = dists[indices].mean()
                     if cutoff_tmp<cutoff :
                         # if better score, replace the cutoff
                         cutoff = cutoff_tmp
@@ -188,7 +188,7 @@ class Topology(object):
         tags = self.atoms.get_tags()
         # analyze
         # first build the neighborlist
-        cutoffs      = self._get_cutoffs(Xis=Xis,Ais=Ais) 
+        cutoffs      = self._get_cutoffs(Xis=Xis,Ais=Ais)
         neighborlist = NeighborList(cutoffs=cutoffs,
                                     bothways=True,
                                     self_interaction=False,
@@ -198,14 +198,14 @@ class Topology(object):
         for ai in Ais:
             # get indices and offsets of dummies only!
             ni,no = neighborlist.get_neighbors(ai)
-            ni,no = zip(*[(idx,off) 
+            ni,no = zip(*[(idx,off)
                           for idx,off in list(zip(ni,no)) if idx in Xis])
             ni = numpy.asarray(ni)
             no = numpy.asarray(no)
             # get absolute positions, no offsets
             positions = self.atoms.positions[ni] + no.dot(self.atoms.cell)
             # create the Atoms object
-            fragment = Atoms("X"*len(ni),positions,tags=tags[ni]) 
+            fragment = Atoms("X"*len(ni),positions,tags=tags[ni])
             # calculate the point group properties
             max_order = min(8,len(ni))
             shape = symmetry.get_symmetry_elements(mol=fragment.copy(),
@@ -261,7 +261,7 @@ def download_topologies():
         logger.info("Successfully downloaded the nets from RCSR.")
         resp.raw.decode_content = True
         with open(path,"wb") as outpt:
-            shutil.copyfileobj(resp.raw, outpt)        
+            shutil.copyfileobj(resp.raw, outpt)
     return
 
 def read_topologies_database(update = False,
@@ -302,7 +302,6 @@ def read_topologies_database(update = False,
 
 if __name__ == "__main__":
     # update everything
-    topologies = read_topologies_database(update = True, 
-                                          path = None, 
+    topologies = read_topologies_database(update = True,
+                                          path = None,
                                           use_defaults = True)
-

@@ -21,12 +21,12 @@ from collections import defaultdict
 
 from autografs.utils.sbu        import read_sbu_database
 from autografs.utils.topology   import read_topologies_database
-from autografs.utils.mmanalysis import analyze_mm 
+from autografs.utils.mmanalysis import analyze_mm
 from autografs.utils.topology   import Topology
 import autografs.utils.sbu
 
 
-logger = logging.getLogger(__name__) 
+logger = logging.getLogger(__name__)
 
 
 class Framework(object):
@@ -34,11 +34,11 @@ class Framework(object):
     The Framework object contain the results of an Autografs run.
 
     Designed to store and post-process the aligned fragments and the
-    corresponding topology of an Autografs-made structure. 
+    corresponding topology of an Autografs-made structure.
     Methods available are setters and getters for the topology, individual SBU,
     rescaling of the total structure, and finally the connecting and returning
     of a clean ASE Atoms object.
-    The SBUs are assumed to already be aligned and tagged by the 
+    The SBUs are assumed to already be aligned and tagged by the
     Framework generator, and both bonds and mmtypes are assumed to be ordered.
     The bond matrices are also assumed to be block symmetrical.
     """
@@ -70,13 +70,13 @@ class Framework(object):
             self.bonds = numpy.asarray(bonds)
         else:
             self.bonds = []
-        # keep a dict of elements to delete in 
+        # keep a dict of elements to delete in
         # each SBU at connection time. Necessary for example
         # during iterative functionalization.
         self._todel = defaultdict(list)
         return None
 
-    def __contains__(self, 
+    def __contains__(self,
                      obj):
         """Iterable intrinsic"""
         r = False
@@ -143,7 +143,7 @@ class Framework(object):
         # get the offset direction ranges
         x = list(range(0,m[0],1))
         y = list(range(0,m[1],1))
-        z = list(range(0,m[2],1)) 
+        z = list(range(0,m[2],1))
         # new framework object
         supercell = self.copy()
         ocell = supercell.topology.atoms.get_cell()
@@ -167,7 +167,7 @@ class Framework(object):
                         continue
                     # directly tranfer new tags
                     sbu = supercell[atom.index]
-                    sbu.transfer_tags(supertopo.fragments[atom.index])           
+                    sbu.transfer_tags(supertopo.fragments[atom.index])
             else:
                 mcount += 1
                 coffset = ocell.dot(offset)
@@ -196,9 +196,9 @@ class Framework(object):
                update = False):
         """Append all data releted to a building unit in the framework.
 
-        This includes the ASE Atoms object, the bonding matrix, and the 
-        molecular mechanics atomic types as numpy arrays. These three objects 
-        are related through indexing: sbu[i] has a MM type mmtypes[i] and 
+        This includes the ASE Atoms object, the bonding matrix, and the
+        molecular mechanics atomic types as numpy arrays. These three objects
+        are related through indexing: sbu[i] has a MM type mmtypes[i] and
         a bonding array of bonds[i,:] or bonds[:,i]
         sbu     -- the Atoms object
         bonds   -- the bonds numpy array, of size len(sbu) by len(sbu).
@@ -239,8 +239,8 @@ class Framework(object):
         """Scale the building units positions by a factor alpha.
 
         This uses the correspondance between the atoms in the topology
-        and the building units in the SBU list. Indeed, SBU[i] is centered on 
-        topology[i]. By scaling the topology, we obtain a new center for the 
+        and the building units in the SBU list. Indeed, SBU[i] is centered on
+        topology[i]. By scaling the topology, we obtain a new center for the
         sbu.
         alpha -- scaling factor
         """
@@ -262,7 +262,7 @@ class Framework(object):
         """Refine cell scaling to minimize distances between dummies.
 
         We already have tagged the corresponding dummies during alignment,
-        so we just need to calculate the MSE of the distances between 
+        so we just need to calculate the MSE of the distances between
         identical tags in the complete structure
         alpha0 -- starting point of the scaling search algorithm
         """
@@ -297,11 +297,11 @@ class Framework(object):
             return mse
         # first get an idea of the bounds.
         bounds = list(zip(0.75*cellpar0, 1.25*cellpar0))
-        result = scipy.optimize.minimize(fun = MSE, 
-                                         x0 = cellpar0, 
-                                         method = "L-BFGS-B", 
-                                         bounds = bounds, 
-                                         tol=0.05, 
+        result = scipy.optimize.minimize(fun = MSE,
+                                         x0 = cellpar0,
+                                         method = "L-BFGS-B",
+                                         bounds = bounds,
+                                         tol=0.05,
                                          options={"eps":0.1})
         self.scale(cellpar=result.x)
         logger.info("Best cell parameters found:")
@@ -326,7 +326,7 @@ class Framework(object):
             self[index].atoms.rotate(v=axis,a=angle)
             self[index].transfer_tags(self.topology.fragments[index])
         elif self[index].shape[-1]==2:
-            axis = [x.position for x in self[index].atoms 
+            axis = [x.position for x in self[index].atoms
                                if x.symbol=="X"]
             axis = numpy.asarray(axis)
             axis = axis[0]-axis[1]
@@ -344,7 +344,7 @@ class Framework(object):
             self[index].atoms.rotate(v=plane,a=180.0)
             self[index].transfer_tags(self.topology.fragments[index])
         elif self[index].shape[-1]==2:
-            axis = [x.position for x in self[index].atoms 
+            axis = [x.position for x in self[index].atoms
                                if x.symbol=="X"]
             axis = numpy.asarray(axis)
             axis = axis[0]-axis[1]
@@ -398,7 +398,7 @@ class Framework(object):
                       where,
                       fg   ):
         """Modify a valid slot atom to become a functional group.
-        
+
         The specified slot index and atom index within the slot
         are examined: if the corresponding atom is a single
         atom connected by a bond order of 1 to exactly one other
@@ -498,7 +498,7 @@ class Framework(object):
                     xi0 = pair[0]
                     xis.remove(xi0)
                     symbols[xi0] = "H"
-                    mmtypes[xi0] = "H_" 
+                    mmtypes[xi0] = "H_"
                 else:
                     xi0,xi1 = pair
                     bonds0  = numpy.where(bonds[:,xi0]>0.0)[0]
@@ -507,11 +507,11 @@ class Framework(object):
                     if len(bonds0)==0 and len(bonds1)!=0:
                         xis.remove(xi1)
                         symbols[xi1] = "H"
-                        mmtypes[xi1] = "H_" 
+                        mmtypes[xi1] = "H_"
                     elif len(bonds1)==0 and len(bonds0)!=0:
                         xis.remove(xi0)
                         symbols[xi0] = "H"
-                        mmtypes[xi0] = "H_"                         
+                        mmtypes[xi0] = "H_"
                     else:
                         # the bond order will be the maximum one
                         bo      = max(numpy.amax(bonds[xi0,:]),

@@ -50,12 +50,12 @@ def read_uff_library(library = "uff4mof"):
     return ufflib
 
 def get_bond_matrix(sbu):
-    """Guesses the bond order in neighbourlist based on covalent radii 
-    the radii for BO > 1 are extrapolated by removing 0.1 Angstroms by order 
+    """Guesses the bond order in neighbourlist based on covalent radii
+    the radii for BO > 1 are extrapolated by removing 0.1 Angstroms by order
     see Beatriz Cordero, Veronica Gomez, Ana E. Platero-Prats, Marc Reves, Jorge Echeverria,
-    Eduard Cremades, Flavia Barragan and Santiago Alvarez (2008). 
-    "Covalent radii revisited". 
-    Dalton Trans. (21): 2832-2838 
+    Eduard Cremades, Flavia Barragan and Santiago Alvarez (2008).
+    "Covalent radii revisited".
+    Dalton Trans. (21): 2832-2838
     http://dx.doi.org/10.1039/b801115j
     """
     # first guess
@@ -89,7 +89,7 @@ def get_bond_matrix(sbu):
     organic[alkali   ,:] = False
     organic[:,hydrogens] = False
     organic[:,metals   ] = False
-    organic[:,alkali   ] = False    
+    organic[:,alkali   ] = False
     organic = numpy.where(organic)[0]
     # Hydrogen has BO of 1
     bonds_h = bonds[hydrogens]
@@ -113,7 +113,7 @@ def get_bond_matrix(sbu):
     ix = numpy.ix_(metals,alkali)
     bonds[ix] = 0.0
     ix = numpy.ix_(alkali,metals)
-    bonds[ix] = 0.0    
+    bonds[ix] = 0.0
     # metal-organic is coordination bond
     ix  = numpy.ix_(metals,organic)
     bix = bonds[ix]
@@ -146,7 +146,7 @@ def get_bond_matrix(sbu):
             smallenough = (len(ring)<=10)
             if isring and not seen and bigenough and smallenough:
                 rings.append(ring)
-    # we now have a list of all the shortest rings within 
+    # we now have a list of all the shortest rings within
     # the molecular graph. If planar, the ring might be aromatic
     aromatic_epsilon = 0.1
     aromatic = []
@@ -174,7 +174,7 @@ def uff_symbol(atom):
     """Returns the first twol letters of a UFF parameters"""
     sym  = atom.symbol
     if len(sym) == 1 :
-        sym =''.join([sym,'_']) 
+        sym =''.join([sym,'_'])
     return sym
 
 def best_angle(a      ,
@@ -185,7 +185,7 @@ def best_angle(a      ,
     if len(indices)<=1:
         da = 180.0
     else:
-        angles = numpy.array([sbu.get_angle(a1,a,a3,mic=True) 
+        angles = numpy.array([sbu.get_angle(a1,a,a3,mic=True)
                               for a1,a3 in combinations(indices,2)]).reshape(-1,1)
         if angles.shape[0]>1:
             # do some clustering on the angles, keep most frequent
@@ -210,11 +210,11 @@ def best_radius(a      ,
         if len(others)==0:
             d1 = 0.7
         else:
-            d1      = numpy.array([numpy.array([v[0] for k,v in ufflib.items() 
+            d1      = numpy.array([numpy.array([v[0] for k,v in ufflib.items()
                                    if k.startswith(s)]).mean() for s in others]).mean()
     # get the distances also
     d0  = sbu.get_distances(a,indices,mic=True).mean()
-    dx  = d0-d1 
+    dx  = d0-d1
     return dx
 
 def best_type(dx     ,
@@ -224,7 +224,7 @@ def best_type(dx     ,
               types  ):
     """Chooses the best UFF type according to neighborhood."""
     mincost = 1000.0
-    mintyp  = None 
+    mintyp  = None
     for typ in types:
         xx,aa,cc = ufflib[typ]
         cost_x = ((dx-xx)**2)/2.50
@@ -273,5 +273,3 @@ def analyze_mm(sbu):
     mmtypes = numpy.array(mmtypes)
     bonds   = numpy.array(bonds)
     return bonds,mmtypes
-
-
